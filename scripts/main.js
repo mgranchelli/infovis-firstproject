@@ -44,7 +44,6 @@ function resetValues() {
 
 /**
  * Update data
- * @param {*} o 
  * @param {*} coordinate
  * @param {*} prop 
  */
