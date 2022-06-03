@@ -15,7 +15,7 @@ Facendo click con il pulsante sinistro del mouse su una foglia di un quadrifogli
 
 Tutti i quadrifogli assumono una coordinata x proporzionale al valore della loro variabile 1. 
 
-Facendo click con il pulsante destro (oppure doppio click col sinistro, vedi tu cosa ti viene più facile), invece, è la coordinata y ad avere un valore proporzionale alla variabile selezionata. 
+Facendo click con il pulsante destro, invece, è la coordinata y ad avere un valore proporzionale alla variabile selezionata. 
 
 Fai in modo che i cambi di dimensioni e di posizione dei quadrifogli avvengano con un'animazione fluida. 
 
