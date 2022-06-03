@@ -1,5 +1,4 @@
 var data   = null,
-    backup_data = null,
     margin = { top: 10, right: 10, bottom: 10, left: 10 },
     width  = 960 - margin.left - margin.right,
     height = 800 - margin.top - margin.bottom;
@@ -14,16 +13,14 @@ var yScale = d3.scaleLinear().range([height-150, 150]).interpolate(d3.interpolat
 // Scale for leaves
 var leafScale = d3.scaleLinear().domain([10, 180]).range([10, 100]);
 
-/**
- * Update xScale.domain()
- */
+
+// Update xScale.domain() 
  function updateXScaleDomain() {
     xScale.domain([d3.min(data, function(d) { return d.x; }), d3.max(data, function(d) { return d.x; })]);
 }
 
-/**
- * Update yScale.domain()
- */
+
+// Update yScale.domain()
  function updateYScaleDomain() {
     yScale.domain([d3.min(data, function(d) { return d.y; }), d3.max(data, function(d) { return d.y; })]);
 }
@@ -37,9 +34,6 @@ var svg = d3.select('body').append('svg')
     .attr('id', uuidv4())
     .attr('transform', 'translate(' + margin.left + ',' + margin.top + ')');  
 
-function resetValues() {
-    data = backup_data
-}
 
 /**
  * Update data
@@ -49,9 +43,7 @@ function resetValues() {
  function update(leaf, prop) {
     // Left click
     if(prop == 'x') {
-        if ( xScale.domain()[1] > 10e20 ||  xScale.domain()[0] < 10e-20) {
-            resetValues()
-        }
+        // Update coordinate x
         data = d3.map(data, function(d) {
             //console.log(eval('d.leaf_' + leaf.x))
             return {
@@ -62,9 +54,7 @@ function resetValues() {
     }
     // Right click
     else {
-        if ( yScale.domain()[1] > 10e20 ||  yScale.domain()[0] < 10e-20) {
-            resetValues()
-        }
+        // Update coordinate y
         data = d3.map(data, function(d) {
             return {
                 ...d,
@@ -76,10 +66,7 @@ function resetValues() {
     draw();
 }
 
-/**
- * Draw 
- */
-
+// Draw
 function draw() {
     // Update domain
     updateXScaleDomain();
@@ -97,7 +84,8 @@ function draw() {
         }) ;
         
         elemEnter.append('path')
-            .attr('d', function(d) {        
+            // Draw leaf 1 
+            .attr('d', function(d) {       
                 return 'M0,0 C' + leafScale(d.leaf_1) + ',' + leafScale(d.leaf_1) + ' 40,80 0,50 C-40,80 -' + 
                 leafScale(d.leaf_1) + ',' + leafScale(d.leaf_1) + ' 0,0'
                 })
@@ -107,9 +95,11 @@ function draw() {
             .style('stroke', 'black')
             .style('fill', 'green')
             .style('cursor', 'pointer')
+            // Left click
             .on('click', function(d, i) {
                 update({ x: '1' }, 'x');  
             })
+            // Right click
             .on('contextmenu', function(e, i) {
                 e.preventDefault();
                 update({ y: '1' }, 'y');
@@ -117,6 +107,7 @@ function draw() {
             
 
         elemEnter.append('path')
+            // Draw leaf 2
             .attr('d', function(d) {
                 return 'M0,0 C' + leafScale(d.leaf_2) + ',' + leafScale(d.leaf_2) + ' 40,80 0,50 C-40,80 -' + 
                 leafScale(d.leaf_2) + ',' + leafScale(d.leaf_2) + ' 0,0'
@@ -127,16 +118,19 @@ function draw() {
             .style('stroke', 'black')
             .style('fill', 'green')
             .style('cursor', 'pointer')
+            // Left click
             .on('click', function(d, i) {
                 update({ x: '2' }, 'x');
             })
+            // Right click
             .on('contextmenu', function(e, i) {
                 e.preventDefault();
                 update({ y: '2' }, 'y');
             });
         
         elemEnter.append('path')
-                .attr('d', function(d) {
+            // Draw leaf 3
+            .attr('d', function(d) {
                 return 'M0,0 C' + leafScale(d.leaf_3) + ',' + leafScale(d.leaf_3) + ' 40,80 0,50 C-40,80 -' + 
                 leafScale(d.leaf_3) + ',' + leafScale(d.leaf_3) + ' 0,0'
                 })
@@ -146,16 +140,19 @@ function draw() {
             .style('stroke', 'black')
             .style('fill', 'green')
             .style('cursor', 'pointer')
+            // Left click
             .on('click', function(d, i) {
                 update({ x: '3' }, 'x');
                 
             })
+            // Right click
             .on('contextmenu', function(e, i) {
                 e.preventDefault();
                 update({ y: '3' }, 'y');
             });
 
         elemEnter.append('path')
+            // Draw leaf 4
             .attr('d', function(d) {
                 return 'M0,0 C' + leafScale(d.leaf_4) + ',' + leafScale(d.leaf_4) + ' 40,80 0,50 C-40,80 -' + 
                 leafScale(d.leaf_4) + ',' + leafScale(d.leaf_4) + ' 0,0'
@@ -166,15 +163,17 @@ function draw() {
             .style('stroke', 'black')
             .style('fill', 'green')
             .style('cursor', 'pointer')
+            // Left click
             .on('click', function(d, i) {
                 update({ x: '4' }, 'x');
             })
+            // Right click
             .on('contextmenu', function(e, i) {
                 e.preventDefault();
                 update({ y: '4' }, 'y');
             });
 
-
+    // Leaves transition
     d3.selectAll('.leaves')
         .transition()
         .duration(500)
@@ -198,8 +197,7 @@ function uuidv4() {
 d3.json('assets/leaves.json').then(
     function(leaves) {
         //console.log('leaves: ', leaves)
-
-        // Add data id and coordinate x and y
+        // Add id and coordinates x and y for each four-leaves
         data = d3.map(leaves, function(d) { 
             return {
                 ...d,
@@ -209,8 +207,6 @@ d3.json('assets/leaves.json').then(
             }; 
         });
         // Start
-        console.log(d3.min(data, function(d) { return d.leaf_1; }))
-        backup_data = data
         draw();
     }
 );
