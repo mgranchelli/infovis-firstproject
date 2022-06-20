@@ -1,7 +1,9 @@
 var data   = null,
     margin = { top: 10, right: 10, bottom: 10, left: 10 },
     width  = 960 - margin.left - margin.right,
-    height = 800 - margin.top - margin.bottom;
+    height = 800 - margin.top - margin.bottom,
+    current_leaf_x = null,
+    current_leaf_y = null;
 
     
 // Scale for x-axis
@@ -11,7 +13,7 @@ var xScale = d3.scaleLinear().range([150, width-150]).interpolate(d3.interpolate
 var yScale = d3.scaleLinear().range([height-150, 150]).interpolate(d3.interpolateRound);
 
 // Scale for leaves
-var leafScale = d3.scaleLinear().domain([10, 180]).range([10, 100]);
+var leafScale = d3.scaleLinear().range([1, 200]).interpolate(d3.interpolateRound);
 
 
 // Update xScale.domain() 
@@ -23,6 +25,15 @@ var leafScale = d3.scaleLinear().domain([10, 180]).range([10, 100]);
 // Update yScale.domain()
  function updateYScaleDomain() {
     yScale.domain([d3.min(data, function(d) { return d.y; }), d3.max(data, function(d) { return d.y; })]);
+}
+
+// Update leafScale.domain()
+function updateLeafScaleDomain() {
+    leafScale.domain([
+        d3.min(data, function(d) { 
+            return d.leaf_1, d.leaf_2, d.leaf_3, d.leaf_4; }), 
+        d3.max(data, function(d) { 
+            return d.leaf_1, d.leaf_2, d.leaf_3, d.leaf_4; })]);
 }
 
 
@@ -42,7 +53,8 @@ var svg = d3.select('body').append('svg')
  */
  function update(leaf, prop) {
     // Left click
-    if(prop == 'x') {
+    if(prop == 'x' & current_leaf_x != leaf.x) {
+        current_leaf_x = leaf.x
         // Update coordinate x
         data = d3.map(data, function(d) {
             //console.log(eval('d.leaf_' + leaf.x))
@@ -53,7 +65,8 @@ var svg = d3.select('body').append('svg')
         })
     }
     // Right click
-    else {
+    else if(prop == 'y' & current_leaf_y != leaf.y) {
+        current_leaf_y = leaf.y
         // Update coordinate y
         data = d3.map(data, function(d) {
             return {
@@ -62,6 +75,7 @@ var svg = d3.select('body').append('svg')
             };
         });
     }
+    //console.log("Current leaf (x, y): (", current_leaf_x, ",", current_leaf_y, ")")
     // Update
     draw();
 }
@@ -71,6 +85,7 @@ function draw() {
     // Update domain
     updateXScaleDomain();
     updateYScaleDomain();
+    updateLeafScaleDomain();
     //console.log(data)
     let elem = svg.selectAll('.leaves').data(data, function(d) {
         return d.id;
