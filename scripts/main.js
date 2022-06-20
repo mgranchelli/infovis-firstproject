@@ -13,7 +13,7 @@ var xScale = d3.scaleLinear().range([150, width-150]).interpolate(d3.interpolate
 var yScale = d3.scaleLinear().range([height-150, 150]).interpolate(d3.interpolateRound);
 
 // Scale for leaves
-var leafScale = d3.scaleLinear().range([1, 200]).interpolate(d3.interpolateRound);
+var leafScale = d3.scaleLinear().range([1, 300]).interpolate(d3.interpolateRound);
 
 
 // Update xScale.domain() 
